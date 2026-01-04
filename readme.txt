@@ -1,3 +1,1 @@
-richiesta POST con parametri da terminale 
 
-curl -X POST -d "how=pretty please" http://prettyplease.challs.olicyber.it/ 
