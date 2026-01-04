@@ -1,0 +1,45 @@
+flag{parsing_pcaps_is_not_that_hard}
+
+from scapy.all import rdpcap, IP, TCP, UDP
+
+def extract_flag_parts(pcap_file):
+    packets = rdpcap(pcap_file)
+    clients = {}
+
+    for pkt in packets:
+        if IP in pkt:
+            ip_src = pkt[IP].src
+            
+            # Controlla se il pacchetto ha un carico utile (Raw data)
+            # Spesso i pezzi di flag sono nei pacchetti TCP o UDP
+            payload = b""
+            if pkt.haslayer(TCP):
+                payload = bytes(pkt[TCP].payload)
+            elif pkt.haslayer(UDP):
+                payload = bytes(pkt[UDP].payload)
+
+            if payload:
+                # Se l'IP non è nel dizionario, lo aggiungiamo
+                if ip_src not in clients:
+                    clients[ip_src] = []
+                
+                # Decodifica se possibile, altrimenti tieni i bytes
+                try:
+                    content = payload.decode('utf-8', errors='ignore').strip()
+                    if content: # Aggiungi solo se non è vuoto
+                        clients[ip_src].append(content)
+                except:
+                    pass
+
+    return clients
+
+# Utilizzo dello script
+pcap_path = "flag-interceptor.pcap" # Cambia con il nome del tuo file
+risultati = extract_flag_parts(pcap_path)
+
+print("--- Frammenti trovati per IP ---")
+full_flag_sequence = []
+for ip in sorted(risultati.keys()):
+    frammento = "".join(risultati[ip])
+    if 'flag{' in frammento and '}' in frammento:
+        print(f"IP {ip}: {frammento}")
