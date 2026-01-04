@@ -1,0 +1,1 @@
+facendo directory traversal una volta vedo che c'è una sottocartella da pubblicare ../dapubblicare

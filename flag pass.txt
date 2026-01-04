@@ -1,0 +1,1 @@
+nella sezione admin su inspect fare le operazioni e ho un token che nella parte admin posso usare per modificare i risultati di un test normale 

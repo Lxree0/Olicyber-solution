@@ -1,0 +1,7 @@
+fare una richiesta al sito con il metodo flag, l'ho fatto dal terminale con (curl -X FLAG "sito") . Facendolo mi dice di guardare negli headers quindi semplicemente ho fatto un piccolo codice python
+
+import requests
+
+url = 'http://convenzione.challs.olicyber.it/'
+response = requests.request("FLAG", url)
+print(response.headers)

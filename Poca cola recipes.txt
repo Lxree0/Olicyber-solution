@@ -1,0 +1,2 @@
+nei pacchetti inviati conn la post ci sono dei file, mi sonno fatto fare un codice da chat gpt che estrae i file e stava una zip la password era contenuta in un altro pacchetto
+la flag : flag{l'1n6r3d13n73_536r370_è_am0r3..e_p4t4t3}

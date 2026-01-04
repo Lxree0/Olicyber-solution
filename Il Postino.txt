@@ -1,0 +1,4 @@
+flag{smtp_w4s_b0rn_back_1n_1981_h0w_crazy_i5_that?}
+
+su wire sta un pacchetto che ha una zip all'interno semplicemente copiare la base 64 del pacchetto e metterla su cyberchef poi fare save as file.zip e aprire il file con questa chiave
+:cGX!#XpgRoi25v9m

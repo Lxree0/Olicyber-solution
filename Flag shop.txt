@@ -1,0 +1,2 @@
+modifica della richiesta con burp, 
+ho usato il proxy per modificare la richiesta e mettere il costo a 10, cosi ho premuto forwarding e ho inviato la richiesta prendendo la flag

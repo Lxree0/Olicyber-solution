@@ -1,0 +1,62 @@
+La funzione generateKey() sceglie uno shift casuale (start) tra 1 e 25, creando la chiave (key). Questa chiave è l'alfabeto cifrante per il primo carattere.
+
+La funzione encrypt() non usa una chiave Vigenère tradizionale (che ripete una parola chiave), ma ruota l'intero alfabeto cifrante di 1 posizione a sinistra dopo ogni carattere cifrato.
+Abbiamo confrontato i primi caratteri noti del testo in chiaro e del testo cifrato per risalire allo shift iniziale segreto (start):Testo in chiaro previsto: f (indice 5)Testo cifrato fornito: x (indice 23)Per cifrare f come x con una sostituzione fissa, è necessario uno shift di
+ Shift Iniziale del Cifrario di Cesare è quindi 18.
+
+
+
+import random
+
+alphabet = "abcdefghijklmnopqrstuvwxyz"
+ciphertext = "xcqv{gvyavn_zvztv_etvtddlnxcgy}"
+
+def generateKey(start_shift):
+    # Genera la chiave con uno shift fisso
+    key = "".join([alphabet[start_shift:], alphabet[0:start_shift]])
+    return key
+
+def decrypt(cipher, key):
+    plaintext = ""
+    current_key = key # Copia la chiave per la rotazione
+    
+    # La logica di decifratura è l'inverso dell'algoritmo di cifratura
+    for k in range(len(cipher)):
+        character = cipher[k]
+        
+        # Gestisce solo le lettere minuscole e i caratteri non cifrati
+        if character.isalpha() and character.islower():
+            
+            # 1. Trova l'indice del carattere cifrato nella chiave corrente
+            i = current_key.index(character)
+            
+            # 2. L'indice 'i' corrisponde al carattere in chiaro nell'alfabeto
+            characterDecrypted = alphabet[i]
+            
+            # 3. Ruota la chiave A SINISTRA per il prossimo carattere (come nell'algoritmo originale)
+            current_key = "".join([current_key[len(current_key)-1:], current_key[0:len(current_key)-1]])
+            
+            plaintext = "".join([plaintext, characterDecrypted])
+        
+        # Caratteri non cifrati (es. '{', '}', '_', punteggiatura)
+        else:
+            if character.isupper():
+                # Se ci fossero caratteri maiuscoli, dovremmo gestirli
+                pass
+            
+            # Ruota la chiave SOLO SE il carattere è stato cifrato (non è il tuo caso)
+            # MA il tuo codice originale RUOTA solo se è maiuscolo o minuscolo.
+            
+            plaintext = "".join([plaintext, character])
+            
+    return plaintext
+
+# 1. Trovato che lo shift iniziale è 18 (per mappare 'f' -> 'x')
+START_SHIFT = 18
+
+# 2. Esegui la decifratura
+initial_key = generateKey(START_SHIFT)
+decrypted_flag = decrypt(ciphertext, initial_key)
+
+print(f"Chiave iniziale (Shift): {START_SHIFT}")
+print(f"Testo Decifrato: {decrypted_flag}")

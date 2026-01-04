@@ -1,0 +1,1 @@
+aprendo devtools si può vedere che nella sezione dello scripts js ce un api, digitando quindi /api/users.php ho visto le credenziali di admin decriptate su cyberchef flag : flag{aut3nticazione_l4t0_cl1ent??}

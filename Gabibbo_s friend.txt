@@ -1,0 +1,1 @@
+nel codice python fornito si vede che ce una sezione dove nell'url puoi mettere /get-picture e server per dare l'emoji, la condizione if restituisce ??? se metto nell'url /get-pictures?id=5 cioè restituisce ??? con id maggiore di 4 altrimenti restituisce qualcosa , ho provato a mettere l'indici negativi e a -3 da la flag

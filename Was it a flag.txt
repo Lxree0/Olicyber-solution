@@ -1,0 +1,1 @@
+andare sul sito con burp e vedere la risposta quando faccio la richiesta a flag.php

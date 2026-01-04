@@ -1,0 +1,2 @@
+Prima parte della flag: robots.txt
+seconda parte : Gli spider usano sitemap.xml per scoprire le pagine di un sito url/sitemap.xml

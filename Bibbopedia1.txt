@@ -1,0 +1,2 @@
+andare sulla pagina del numero 42 cambiare qualcosa, ispezionare la pagina e mettere il pulsante disabilitato a enabled ed esce la flag
+flag{w4it_are_u_4n_3dit0r?}

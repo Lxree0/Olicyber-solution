@@ -1,0 +1,20 @@
+i commenti dei pacchetti flag{4lw4y5_ch3ck_th3_c0mm3nt5}
+
+import re
+
+# Nome del file PCAPNG
+file_name = "capturee.pcapng"
+
+# Leggi il file in binario
+with open(file_name, "rb") as f:
+    data = f.read()
+
+# Trova tutte le stringhe ASCII di almeno 4 caratteri
+ascii_strings = re.findall(rb"[ -~]{4,}", data)  # intervallo di caratteri stampabili
+
+# Filtra solo quelle che contengono "flag"
+flag_strings = [s.decode('utf-8', errors='ignore') for s in ascii_strings if b"flag" in s]
+
+# Stampa i risultati
+for s in flag_strings:
+    print(s)

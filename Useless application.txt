@@ -1,0 +1,1 @@
+c'è il cookie codificato in base 64 basta modificare da guest a admin riconvertirlo e ricaricare la pagina

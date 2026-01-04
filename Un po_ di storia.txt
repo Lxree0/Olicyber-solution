@@ -1,0 +1,3 @@
+Un po' di storia di vegenere, mettere su questo sito il testo https://www.dcode.fr/autoclave-cipher
+
+flag{hai_rotto_autokey_bravo}

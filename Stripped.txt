@@ -1,0 +1,1 @@
+aprendo il file su ghidra c'è una funzione che si chiama print flag e fra la puts della flag, quella è la flag basta copia e incolla

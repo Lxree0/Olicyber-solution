@@ -1,0 +1,15 @@
+è lo stesso della 1 soltanto che il file viene aperto e visualizzato come testo quindi bisogna includerlo nel url
+
+http://shellrevenge2.challs.olicyber.it/index.php?page=uploads/c918827cb9e53298f4730de25c524c7b/s.php
+
+Il tuo URL di successo era:
+
+.../index.php?page=uploads/[HASH]/s.php
+
+Normalmente, una pagina index.php con un parametro come ?page= serve a caricare contenuti legittimi, ad esempio:
+
+Intenzione del Programmatore: index.php?page=home fa in modo che il codice PHP esegua ("home.php").
+
+Azione dell'Attaccante: Hai sfruttato la mancanza di controllo del programmatore per far eseguire al codice PHP: include("uploads/[HASH]/s.php").
+
+quindi questa parte qua: index.php?page=uploads serve per eseguire il codice php e non mostrarlo come testo

@@ -1,0 +1,1 @@
+su wireshark c'è un modo per decodificare ii pacchetti tls, andare su Edit → Preferences → Protocols → TLS e andare su master keys e mettere il keylog che il sito ha dato e quando si seguirà poi il flusso tls ci sarà la flag

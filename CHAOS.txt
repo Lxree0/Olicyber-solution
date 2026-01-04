@@ -1,0 +1,24 @@
+Il tempo dei pacchetti è strano sono ordinati male, ho fatto fare un codice per ordinarli per tempo e per estrarre il payload:flag{T00_MUCH_CH405}
+
+from scapy.all import rdpcap, TCP, Raw
+
+# Nome del file PCAP
+pcap_file = "CHAOS.pcap"
+
+# Leggi tutti i pacchetti
+packets = rdpcap(pcap_file)
+
+# Seleziona solo i pacchetti TCP
+tcp_packets = [pkt for pkt in packets if pkt.haslayer(TCP)]
+
+# Ordina i pacchetti per timestamp
+tcp_packets_sorted = sorted(tcp_packets, key=lambda p: p.time)
+
+# Estrai il payload TCP e salvalo in un file
+with open("tcp_payload.bin", "wb") as f:
+    for pkt in tcp_packets_sorted:
+        if pkt.haslayer(Raw):  # controlla che ci sia del payload
+            f.write(pkt[Raw].load)
+
+print(f"[+] Estratti {len(tcp_packets_sorted)} pacchetti TCP in ordine di timestamp.")
+print("[+] Payload salvato in tcp_payload.bin")

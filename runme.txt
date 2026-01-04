@@ -1,0 +1,2 @@
+flag scritta in chiaro nel main quando apro il file con ghidra
+flag{y0u_c4n_3x3c_b1n4r13s}

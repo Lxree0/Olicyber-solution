@@ -1,0 +1,2 @@
+eseguire il programma su ubuntu
+flag{SPLAAAAAAAAAAAAAAAAAASH}
