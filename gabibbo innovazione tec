@@ -1,0 +1,7 @@
+flag{el3Phan5_4nD_g1t_NEver_f0rgE7}
+
+non si può fare niente come exploit quindi si vedono i log di github e vediamo che iinserisce l'admim come test ad un certo punto quindi
+
+git show 6d74ea9
+
+e esce la password dell'admin che è tkdF^cZFFaAD3!dTEQ7n
