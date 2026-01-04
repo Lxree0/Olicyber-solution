@@ -1,0 +1,98 @@
+nella prima iimmagine se la meto su cyberchef e cerco un link lo rovo e mi porta alla seconda immagine dove farò il comando string e mi trova un'altro link: https://postimg.cc/7bz4c6Jg
+
+poi per la 3 immagine ho trovato uno script su github ee l'ho modificato:
+
+  import subprocess
+import re
+import os
+
+def is_prime(number):
+    if number <= 1: return False
+    if number <= 3: return True
+    if number % 2 == 0 or number % 3 == 0: return False
+    i = 5
+    while i * i <= number:
+        if number % i == 0 or number % (i + 2) == 0:
+            return False
+        i += 6
+    return True
+
+# Prende l'immagine dalla stessa cartella dello script
+script_dir = os.path.dirname(__file__)
+image_path = os.path.join(script_dir, "congratulations.png")
+
+print(f"--- Analisi file: {image_path} ---")
+
+# Estrazione numeri primi dai metadati dell'immagine
+try:
+    command = ["identify", "-verbose", image_path]
+    output = subprocess.run(command, capture_output=True, text=True).stdout
+    
+    # Trova tutti i numeri nell'output di identify
+    all_numbers = re.findall(r'\b\d+\b', output)
+    
+    primes = []
+    for n in all_numbers:
+        num_val = int(n)
+        if is_prime(num_val) and num_val not in primes:
+            primes.append(num_val)
+    
+    # Prende i primi 3 numeri primi trovati
+    selected_primes = primes[:3]
+    subreddit_id = 1
+    for p in selected_primes:
+        subreddit_id *= p
+
+    print(f"Numeri primi trovati: {selected_primes}")
+    print(f"ID Subreddit (Moltiplicazione): {subreddit_id}")
+    print(f"Link: reddit.com/r/{subreddit_id}")
+
+except Exception as e:
+    print(f"Errore durante l'analisi dell'immagine: {e}")
+
+# --- DECODIFICA DEL KOAN ---
+text = '''{A KOAN}
+A MAN DECIDED TO GO AND STUDY WITH A MASTER
+HE WENT TO THE DOOR OF THE MASTER
+"WHO ARE YOU WHO WISHES TO STUDY HERE" ASKED THE MASTER
+THE STUDENT TOLD THE MASTER HIS NAME
+"THAT IS NOT WHO YOU ARE, THAT IS ONLY WHAT YOU ARE CALLED
+WHO ARE YOU WHO WISHES TO STUDY HERE" HE ASKED AGAIN
+THE MAN THOUGHT FOR A MOMENT, AND REPLIED "I AM A PROFESSOR"
+"THAT IS WHAT YOU DO, NOT WHO YOU ARE," REPLIED THE MASTER
+"WHO ARE YOU WHO WISHES TO STUDY HERE"
+CONFUSED, THE MAN THOUGHT SOME MORE
+FINALLY, HE ANSWERED, "I AM A HUMAN BEING"
+"THAT IS ONLY YOUR SPECIES, NOT WHO YOU ARE
+WHO ARE YOU WHO WISHES TO STUDY HERE", ASKED THE MASTER AGAIN
+AFTER A MOMENT OF THOUGHT, THE PROFESSOR REPLIED "I AM A CONSCIOUSNESS INHABITING AN ARBITRARY BODY"
+"THAT IS MERELY WHAT YOU ARE, NOT WHO YOU ARE
+WHO ARE YOU WHO WISHES TO STUDY HERE"
+THE MAN WAS GETTING IRRITATED
+"I AM," HE STARTED, BUT HE COULD NOT THINK OF ANYTHING ELSE TO SAY, SO HE TRAILED OFF
+AFTER A LONG PAUSE THE MASTER REPLIED, "THEN YOU ARE WELCOME TO COME STUDY"'''
+
+# Pulizia del testo per la decodifica
+text_array = [line for line in text.split('\n') if line.strip()]
+
+# Coordinate [Riga, Carattere]
+indexes = [    
+    9, 43, 19, 50, 5, 35, 1, 1, 14, 41, 19, 10, 
+    12, 11, 7, 44, 5, 23, 20, 11, 6, 58, 16, 22, 
+    20, 63, 8, 12, 17, 27, 2, 34, 9, 4, 20, 34, 
+    19, 57, 15, 35, 8, 44, 15, 80, 18, 29, 1, 8
+]
+
+flag = ""
+for i in range(0, len(indexes), 2):
+    riga = indexes[i] - 1
+    colonna = indexes[i+1] - 1
+    flag += text_array[riga][colonna]
+
+print("\n--- FLAG DECODIFICATA ---")
+print(flag)
+
+
+
+
+la flag è PTM{SEEKANDYOUSHALLFIND}
