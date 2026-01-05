@@ -1,0 +1,3 @@
+vedo tutti i commit nella cartella .git e posso cercare direttamente la stringa flag in tutti i commit 
+git grep "flag" $(git rev-list --all)
+flag{0h_n0_my_4p1_k3y}
