@@ -1,0 +1,11 @@
+Nel pcap si legge facilmente l'username e la password di login. Si può quindi collegarsi, analizzare il file system e trovare la flag come se fosse una vera shell.
+
+username: gabibbo
+pass : p4ssw0rd_SSH_s3gr3t4
+
+cd Desktop
+cd olicyber
+cd 2022
+cd Olicyber_git_repository_2022
+cd network_brutta
+cat flag.txt
