@@ -1,0 +1,10 @@
+1. Analisi Audio
+Aprendo il file con un software di editing audio (come Audacity), la forma d'onda non rivelava nulla di insolito. Tuttavia, passando alla visualizzazione Spettrogramma, è emersa una stringa di testo nascosta nelle frequenze medie durante la pausa strumentale.
+
+2. Estrazione della stringa
+La stringa offuscata individuata nello spettrogramma era: swp{v0p3wk1qj_1q_b0xu_h4u5_z4v_vr_4qq0b1qj}
+
+3. Decodifica (Cifrario di Cesare)
+Sapendo che il formato della flag previsto era ptm{}, è stato identificato un Cifrario di Cesare con uno spostamento di -3 (o ROT23).
+
+ptm{s0m3th1ng_1n_y0ur_e4r5_w4s_so_4nn0y1ng}
