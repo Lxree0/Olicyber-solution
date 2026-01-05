@@ -1,1 +1,1 @@
-ptm{m4k3_r3tr0_g4m1ng_gr34t_4g41n!!} cambiare l'estensione in .crt e aprirla come file di testo e cercare la flag
+ptm{m4k3_r3tr0_g4m1ng_gr34t_4g41n!!} aprire il file in un hex editor ed esce la flag
