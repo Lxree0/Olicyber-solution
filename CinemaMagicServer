@@ -1,0 +1,37 @@
+Per trovare la flag basta seguire i flussi http dei pacchetti 10, 66, 174
+**flag{http_str3ams_4r3_m4g1c}**
+
+
+
+import pathlib
+
+
+
+def stampa_contenuto_cartella(percorso_cartella):
+    # Trasforma la stringa in un oggetto Path
+    cartella = pathlib.Path(percorso_cartella)
+
+    # Verifica se il percorso esiste ed è una cartella
+    if not cartella.is_dir():
+        print(f"Errore: '{percorso_cartella}' non è una cartella valida.")
+        return
+
+    # Itera su tutti i file nella cartella
+    for file in cartella.iterdir():
+        # Saltiamo le sottocartelle, leggiamo solo i file flag{http_4r3_m4g1c}
+        if file.is_file():
+            print(f"\n--- CONTENUTO DI: {file.name} ---")
+            try:
+                # Legge e stampa il contenuto del file
+                contenuto = file.read_text(encoding='utf-8')
+                print(contenuto)
+            except Exception as e:
+                print(f"Non è stato possibile leggere il file: {e}")
+            
+            print("-" * (20 + len(file.name)))
+
+# Esempio di utilizzo: inserisci qui il percorso della tua cartella
+# Usa '.' per la cartella corrente
+stampa_contenuto_cartella('Percorso_files')
+
+
