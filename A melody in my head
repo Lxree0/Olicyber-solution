@@ -1,0 +1,46 @@
+BRUTE FORCE AHAHAHAH flag{i7s_l1k3_My_iP0ds_s7ucK_oN_R3P14y}
+
+
+#!/usr/bin/env python3
+from pwn import *
+
+# Configurazione
+HOST = "melody.challs.olicyber.it"
+PORT = 10020
+TARGET_NONCE = "NONCE 02"
+PASSWORD = "0cce6bab87baa7031b69539ac1a211f202fc35cc8f3ac27fdb7e527527310f0e" #Vista dal file pcap
+
+def attempt_connection():
+    attempt = 0
+    while True:
+        attempt += 1
+        print(f"[*] Tentativo {attempt}...", end="\r")
+        
+        try:
+            # Apriamo la connessione
+            r = remote(HOST, PORT, level='error')
+            
+            # Leggiamo il banner iniziale o la richiesta di login
+            # Aumentiamo il timeout se la connessione è lenta
+            received = r.recvrepeat(0.5).decode(errors='ignore')
+            
+            if TARGET_NONCE in received:
+                print(f"\n[!] TROVATO! {TARGET_NONCE} rilevato.")
+                print(f"[+] Inviando password...")
+                
+                # Inviamo la password seguita da newline
+                r.sendline(PASSWORD.encode())
+                
+                # Entriamo in modalità interattiva per vedere la flag
+                r.interactive()
+                break
+            else:
+                # Se non è quello giusto, chiudiamo e riproviamo
+                r.close()
+                
+        except Exception as e:
+            print(f"\n[!] Errore di connessione: {e}")
+            time.sleep(1)
+
+if __name__ == "__main__":
+    attempt_connection()
