@@ -1,0 +1,26 @@
+nel flusso vediamo che c'è una flag strana, è stata cifrata, esportando gli oggetti http c'è ne uno in cui viene detto come viene validata la flag:
+
+Per renderla irriconoscibile, manda l'i-esimo carattere della flag (partendo da 0) cifrato col Cifrario di Cesare, usando i come chiave (i simboli rimangono così come sono)
+
+# Stringa cifrata in input
+flag_cifrata = "fmcj{yo_ackyzb_ihruvcvjam}"
+
+# Inizializzazione della lista per il risultato
+f = [""] * len(flag_cifrata)
+
+for i in range(len(flag_cifrata)):
+    # Mantieni i simboli speciali invariati
+    if flag_cifrata[i] in ['{', '}', '_']:
+        f[i] = flag_cifrata[i]
+    else:
+        # Applica la decifratura basata sull'indice i
+        # ord('a') è 97
+        f[i] = chr((ord(flag_cifrata[i]) - i - ord('a')) % 26 + ord('a'))
+
+# Unisce i caratteri e stampa la flag finale
+print("Flag Decodificata:", "".join(f))
+
+
+
+
+flag{ti_stanno_tracciando}
