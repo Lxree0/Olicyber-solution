@@ -1,0 +1,5 @@
+'''
+flag{l1nux_15_4_.....}                          env variabili d'ambiente comando : export
+flag{....c0mpl3x_And_4m4.....}                  cat /entrypoint.sh
+flag{......Z1ng_cr34Tur3}                      cat /var/log/flg
+flag{l1nux_15_4_c0mpl3x_And_4m4Z1ng_cr34Tur3}
