@@ -1,0 +1,2 @@
+aprire il file pcap e esportare gli oggetti ftp, troveremo un'immagine corrotta, aprirla su un hex editor calcellare i primi byte che corrispondono a quella scritta fino a FF DB e nserire due byte per l'intestazione di un'immagine JPG ovvero FF D8 e poi salvare e avremo la flag: 
+flag{controv3rs1al_f1les}
