@@ -1,0 +1,24 @@
+flag{mul71pl1c4t10n_m0d_256?_n0_pr0bl3m!}
+
+
+def decrypt(ciphertext_hex):
+    ciphertext = bytes.fromhex(ciphertext_hex)
+    
+    # Proviamo tutte le possibili chiavi (solo i numeri dispari < 256)
+    for m in range(1, 256, 2):
+        res = []
+        for c in ciphertext:
+            # Dobbiamo risolvere: c = (m*x + 1) mod 256
+            # x = (c - 1) * invers_m mod 256
+            inv_m = pow(m, -1, 256) # Calcola l'inverso modulare
+            x = ((c - 1) * inv_m) % 256
+            res.append(x)
+        
+        attempt = bytes(res)
+        if b"flag" in attempt:
+            print(f"Chiave trovata: {m}")
+            print(f"Flag: {attempt.decode()}")
+            break
+
+# Incolla qui l'output esadecimale che ti ha dato la CTF
+decrypt("7f1d26c428628a1dd436311d36b0054536f1a79c62f1f59c7b4a8ffc9ca7f19c31bbf16b1dc062e6b2")
