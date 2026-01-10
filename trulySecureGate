@@ -1,0 +1,18 @@
+Tamite Ghidra è stata individuata la funzione checkPassword. Questa funzione utilizza superalgoritm_xor per decifrare la password reale in un buffer nello stack (rbp-0x30).
+
+Dynamic Analysis: Poiché lo XOR è un'operazione simmetrica, invece di invertire l'algoritmo manualmente, ho utilizzato il debugger per leggere il risultato finale.
+
+Soluzione con GDB + GEF
+Breakpoint: Impostato subito dopo la chiamata alla funzione di decifratura: b *checkPassword+200.
+
+Esecuzione: Avvio del programma e inserimento del comando cat flag.txt.
+
+Memory Leak: Ispezione della memoria nello stack per estrarre la password in chiaro prima del confronto:
+
+Bash
+
+x/s $rbp-0x30
+
+
+
+flag{just_dont_decrypt_the_password_lol_53cd8ab4e}
