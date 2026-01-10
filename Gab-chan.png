@@ -1,0 +1,54 @@
+Ottimo! Facciamo un README.md completo che documenta l'intera sfida, spiegando il processo logico: dall'analisi dell'immagine fino all'estrazione della flag criptata.
+
+Questo formato è perfetto per il tuo profilo GitHub perché mostra che sai usare strumenti diversi per risolvere problemi complessi.
+
+CTF Writeup: Steganography & Encrypted Zip 🚩
+Questo repository contiene la soluzione per una sfida di steganografia basata sull'analisi dei bitplane e sull'estrazione di dati cifrati.
+
+📝 Descrizione della Sfida
+L'obiettivo era recuperare una flag nascosta all'interno di un'immagine PNG (g.png). L'immagine non presentava anomalie visibili, suggerendo l'uso di tecniche LSB (Least Significant Bit).
+
+🛠 Strumenti Utilizzati
+zsteg: Analisi automatizzata dei bitplane (canali LSB/MSB).
+
+binwalk: Identificazione ed estrazione di file incorporati.
+
+7z / unzip: Gestione di archivi compressi e cifrati.
+
+WSL (Ubuntu): Ambiente di analisi.
+
+🚀 Procedimento Risolutivo
+1. Analisi dei Bitplane
+Il primo passo è stato scansionare l'immagine con zsteg per identificare dove fossero nascosti i dati.
+
+Bash
+
+zsteg -a g.png
+L'analisi ha rivelato la presenza di un'intestazione Zip archive nel canale Alpha al Bit 2 (b2,rgba,lsb,xy), con un file all'interno denominato flag.txt.
+
+2. Estrazione dei Dati
+Abbiamo estratto i dati grezzi dal canale identificato salvandoli in un file .zip.
+
+Bash
+
+zsteg -E "b2,rgba,lsb,xy" g.png > secret.zip
+Poiché l'estrazione manuale può includere byte di "spazzatura" alla fine del file, abbiamo usato binwalk per ripulire l'archivio ed estrarre solo la parte valida.
+
+Bash
+
+binwalk -e secret.zip
+3. Cracking della Password
+L'archivio ZIP risultante era protetto da password. Attraverso l'analisi degli indizi della sfida (o tramite password recovery), è stata identificata la chiave: Password: VjyQ[6M8WFx[sLCT
+
+4. Estrazione Finale
+Utilizzando la password corretta, abbiamo scompattato l'archivio per ottenere il file di testo.
+
+Bash
+
+7z x secret.zip -p'VjyQ[6M8WFx[sLCT'
+cat flag.txt
+
+
+
+
+flag{n0n_3_m15c_s3nz4_s73g0}
