@@ -1,0 +1,34 @@
+vedo tante query dns, me le prendo tutte con questo comando
+tshark -r capture.pcap -Y "dns.flags.response == 0" -T fields -e dns.qry.name > query.txt
+
+i magic byte delle query soni di un file zip quindi ricostruisco il file con questo codice 
+import binascii
+
+# Carica le righe dal tuo file
+with open("query.txt", "r") as f:
+    lines = f.readlines()
+
+full_hex = ""
+
+for line in lines:
+    # Salta le righe che non contengono il dominio dell'attaccante (es. host10.local)
+    if "attacker.eve" not in line:
+        continue
+    
+    # Prende la parte prima di .attacker.eve
+    content = line.split(".attacker.eve")[0]
+    
+    # Separa l'indice (0000) dal payload vero e proprio
+    if "." in content:
+        payload = content.split(".")[1]
+        full_hex += payload
+
+# Converte tutto il blocco esadecimale in file binario
+with open("esfiltrato.zip", "wb") as out_file:
+    out_file.write(binascii.unhexlify(full_hex))
+
+print("File ricostruito con successo come esfiltrato.zip")
+
+
+e dentro c'è la flag
+flag{i5_dns_th3_new_c4vall0_di_7r01a?}
