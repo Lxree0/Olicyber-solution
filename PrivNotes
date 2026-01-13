@@ -1,0 +1,6 @@
+flag{h3y_s1r_c0uld_y0u_t3ll_m3_wh4t_t1m3_1s_1t?}
+
+
+andando nella pagina users ci sono le date di quando sono stati creati gli utenti in particolare admin, se ispeziono la pagina ho l'istante preciso, perchè questo mi serve a capire la password
+perchè la password di ogni utente viene
+creata in base al timestamp quindi la password di admin è G0GX0IJ7rZ8hdx2A
