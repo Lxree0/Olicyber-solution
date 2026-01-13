@@ -1,0 +1,6 @@
+flag{master_of_dns_127.254.13.25}
+
+
+dig @newstate.challs.olicyber.it -p 12008 here.is.the.flag ANY
+dig +tcp @newstate.challs.olicyber.it -p 12008 base64decode.the.flag CNAME
+dig +tcp @newstate.challs.olicyber.it -p 12008 d818776d7.the.flag ANY
