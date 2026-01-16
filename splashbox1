@@ -1,0 +1,43 @@
+flag{3ppur3_funz10n4_tutt0_p3rf3tt4mente}
+
+SplashBox CTF - Writeup (OTP Bypass)
+Descrizione
+La sfida "SplashBox" richiedeva di ottenere l'accesso all'account amministratore bypassando l'autenticazione a due fattori (2FA). L'obiettivo finale era recuperare la flag contenuta nella pagina riservata ?page=stash, accessibile solo all'utente admin.
+
+Vulnerabilità Identificate
+1. Generazione Deterministica del Segreto (Weak Cryptography)
+Analizzando il meccanismo di autenticazione, è emerso che il segreto TOTP non viene generato in modo casuale e univoco per ogni utente, ma deriva direttamente dallo username.
+
+Il server utilizza l'hash MD5 dello username come seed per la generazione del token.
+
+Poiché lo username "admin" è un'informazione pubblica, il segreto diventa calcolabile da qualsiasi attaccante.
+
+2. Broken Access Control (Parametro POST Manipolabile)
+Il file otp.php gestisce la verifica del codice tramite una richiesta POST che accetta esplicitamente i parametri otpcode e username.
+
+Il server utilizza il parametro username inviato nel corpo della POST per recuperare l'utente dal database e verificare il codice.
+
+Non esiste un controllo che vincoli l'OTP allo username dell'utente attualmente loggato nella sessione di login iniziale.
+
+Questo permette a un utente autenticato con privilegi bassi di inviare un codice valido per l'utente admin, ottenendo l'elevazione dei privilegi.
+
+Fasi dell'Attacco (Exploitation)
+Calcolo del Segreto di Admin: Il segreto è stato ricostruito calcolando l'MD5 della stringa "admin" e convertendolo in Base32 (formato standard per i generatori TOTP come pyotp).
+
+Username: admin
+
+Hash MD5: 69a606d6c503293b7b7c593fe2694224
+
+Base32 Secret: GIYTEMZSMYZDSN3BGU3WCNLBG42DGOBZGRQTAZJUME4DAMLGMMZQ
+
+Generazione del Token TOTP: Utilizzando il segreto calcolato, è stato generato un codice a 6 cifre valido per l'intervallo temporale corrente.
+
+Iniezione e Privilege Escalation: È stata inviata una richiesta POST al server puntando a otp.php:
+
+È stato forzato il parametro username a admin.
+
+È stato inserito l' otpcode generato precedentemente.
+
+Al successo della verifica, il server ha aggiornato la variabile di sessione $_SESSION["username"] impostandola su admin, garantendo l'accesso completo.
+
+Recupero della Flag: Navigando sulla risorsa ?page=stash con la sessione di amministratore attiva, la flag è stata visualizzata correttamente.
