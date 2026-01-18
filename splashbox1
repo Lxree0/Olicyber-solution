@@ -53,6 +53,7 @@ fetch('/otp.php', {
     window.location.href = "/?page=stash";
 });
 
+ATTENZIONE IL CODICE GENERATO DURA 30 SEC
 
 Al successo della verifica, il server ha aggiornato la variabile di sessione $_SESSION["username"] impostandola su admin, garantendo l'accesso completo.
 
