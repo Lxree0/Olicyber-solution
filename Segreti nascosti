@@ -1,0 +1,41 @@
+ITASEC{exp0rt_pack3t_byt3s_is_th3_way}
+
+il pacchetto numero 46 ha uno tar.gz estrarlo con questo 
+
+from scapy.all import rdpcap, Raw
+
+def extract_packet_46(pcap_file, output_file):
+    print(f"Analisi di {pcap_file}...")
+    
+    # Carica i pacchetti dal file pcap
+    packets = rdpcap(pcap_file)
+    
+    # Wireshark conta da 1, Scapy da 0. Il pacchetto 46 è l'indice 45.
+    # Tuttavia, spesso nei pcap filtrati la numerazione cambia, 
+    # quindi verifichiamo il pacchetto che contiene i dati.
+    target_packet = packets[45] 
+
+    if target_packet.haslayer(Raw):
+        payload = target_packet[Raw].load.decode('latin-1')
+        
+        # Cerchiamo l'inizio del file Gzip (1f 8b 08)
+        start_marker = '\x1f\x8b\x08'
+        start_index = payload.find(start_marker)
+        
+        if start_index != -1:
+            # Sappiamo dai tuoi dati che il file è lungo 162 byte
+            end_index = start_index + 162
+            file_data = payload[start_index:end_index]
+            
+            # Salviamo i byte estratti
+            with open(output_file, 'wb') as f:
+                f.write(file_data.encode('latin-1'))
+            
+            print(f"Successo! File estratto e salvato come: {output_file}")
+        else:
+            print("Errore: Marker Gzip non trovato nel pacchetto 46.")
+    else:
+        print("Il pacchetto 46 non contiene dati grezzi (Raw).")
+
+# Utilizzo
+extract_packet_46('traffic.pcap', 'secrets.tar.gz')
