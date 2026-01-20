@@ -1,0 +1,17 @@
+se facciamo un option su python vediamo i metodi consentiti è c'è un metodo strano con un header particolare 
+
+
+'Access-Control-Allow-Headers': 'X-Secret-Message', 'Allow': 'GET, OPTIONS', 'Content-Type': 'text/html; charset=utf-8', 'Date': 'Tue, 20 Jan 2026 16:12:42 GMT', 'Server': 'gunicorn'}
+
+possiamo quuindi fare una richiesta con quell'header
+
+
+import requests
+
+url = "https://training-camp.challs.olicyber.it/"
+headers = {
+    "X-Secret-Message": "" 
+}
+
+response = requests.get(url, headers=headers)
+print(response.text)
