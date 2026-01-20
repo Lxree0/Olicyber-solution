@@ -1,0 +1,58 @@
+il codice main manda una richiesta all'api e controlla che il codice d'invito corrisponde ai primi 10 caratteri in asci quindi il codice sarà \x00\x01\x02\x03\x04\x05\x06\x07\x08\t
+flag{b3nv3nut0_n3l_m10_f4nt4st1c0_s1t0_bu0n_l4v0r0}
+import requests
+
+# URL dell'API di registrazione ricavato dal sorgente
+URL_REGISTRAZIONE = "http://frittomisto.challs.olicyber.it/api/register"
+
+def risolvi_sfida():
+    # 1. GENERAZIONE INVITE CODE
+    # Il sorgente richiede che o.charCodeAt(t) == t per t da 0 a 9 
+    # Generiamo i caratteri ASCII corrispondenti ai valori 0-9
+    invite_code = "".join([chr(t) for t in range(10)])
+
+    # 2. DATI DI REGISTRAZIONE
+    # Usiamo un username alfanumerico per rispettare i vincoli del server
+    payload = {
+        "username": "UtenteOliCyber2027",
+        "password": "PasswordSicura123",
+        "invite": invite_code
+    }
+    print(f"Payload di registrazione: {payload}")
+
+    # Header richiesti per specificare l'invio di JSON
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    print(f"--- Inizio procedura di registrazione ---")
+    print(f"Username: {payload['username']}")
+    # Stampiamo l'invite code in esadecimale perché contiene caratteri non stampabili
+    print(f"Invite Code (Hex): {invite_code.encode().hex()}")
+
+    try:
+        # 3. INVIO RICHIESTA POST
+        response = requests.post(URL_REGISTRAZIONE, json=payload, headers=headers)
+        
+        # Analisi della risposta JSON
+        data = response.json()
+
+        if "error" in data:
+            print(f"Errore del server: {data['error']}")
+        else:
+            print(f"Risultato: {data.get('msg', 'Registrazione riuscita!')}")
+            
+            # Se il server invia la flag dopo la registrazione
+            if "flag" in data:
+                print("\n" + "="*40)
+                print(f"FLAG TROVATA: {data['flag']}")
+                print("="*40)
+            else:
+                print("\nRegistrazione completata, ma la flag non è presente nella risposta.")
+                print("Suggerimento: Prova a fare il login con le stesse credenziali.")
+
+    except Exception as e:
+        print(f"Errore durante l'esecuzione: {e}")
+
+if __name__ == "__main__":
+    risolvi_sfida()
