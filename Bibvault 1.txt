@@ -1,1 +1,2 @@
-prendere i cookies una volta loggati metterli su cyberchef, cambiare il nome in gabibbo e isAdmin true, poi comparira un file da scaricare, eseguirlo con ubuntu e printa la flag
+prendere i cookies una volta loggati metterli su cyberchef, cambiare il nome in gabibbo
+e isAdmin true, poi comparira un file da scaricare, eseguirlo con ubuntu e printa la flag
