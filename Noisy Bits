@@ -1,0 +1,32 @@
+ITASEC{n0t_s0_n01sy_b1ts!}
+
+Questa foto rappresenta i bit di un file zip, dove il pixel nero rappresenta un bit posto a 0 ed il pixel bianco rappresenta un bit posto a 1.
+
+from PIL import Image
+
+# Carica l'immagine
+img = Image.open('bits.bmp').convert('1') # Converte in bianco e nero puro
+pixels = img.load()
+width, height = img.size
+
+bits = []
+
+# Estrae i bit dai pixel
+for y in range(height):
+    for x in range(width):
+        # In genere 0 è nero e 255 (o 1) è bianco
+        bit = 1 if pixels[x, y] > 0 else 0
+        bits.append(bit)
+
+# Raggruppa i bit in byte (8 bit alla volta)
+byte_array = bytearray()
+for i in range(0, len(bits), 8):
+    byte_bits = bits[i:i+8]
+    if len(byte_bits) == 8:
+        # Converte la lista di bit in un numero intero e lo aggiunge al bytearray
+        byte = int(''.join(map(str, byte_bits)), 2)
+        byte_array.append(byte)
+
+# Salva il risultato come file ZIP
+with open('risultato.zip', 'wb') as f:
+    f.write(byte_array)
