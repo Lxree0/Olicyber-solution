@@ -1,0 +1,6 @@
+sito vulnerabile a php injection se apro su bur vedo la richiesta quando fa un calcolo. Posso inviare comandi e mi risponde
+
+ho cercato in giro nelle cartelle ma la flag si trova nelle variabili d'ambiente 
+
+system('env')
+lag{R3mote_c0de_3x3cution_vuln3r4b1l1ty_1s_4lw4ys_d4ng3r0us}
