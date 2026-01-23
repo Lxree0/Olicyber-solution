@@ -1,0 +1,4 @@
+flag{nev3r_sh1p_d3bug_build5!}
+
+nel flusso nel pacchetto 1740 c'è una richhiesta a un'api, tipo api/debug/4 per vedere le note private e sapendo che
+l'id dell'admin è 1 ho fatto http://naas.challs.olicyber.it/api/debug/notes/1
