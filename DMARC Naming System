@@ -1,0 +1,4 @@
+flag{txt_rec0rd_us3cases}
+
+nei pacchetti dns c'è un link ho decodifica da base 64
+TXT: https://datatracker.ietf.org/doc/html/rfc7489 ZmxhZ3t0eHRfcmVjMHJkX3VzM2Nhc2VzfQ==
