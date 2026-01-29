@@ -1,0 +1,59 @@
+& "C:\Program Files\Wireshark\tshark.exe" -r capture.pcapng -Y "usb.device_address == 11 && usb.endpoint_address == 0x81" -T fields -e usbhid.data -e usb.capdata > data.txt
+
+import os
+
+points = []
+x, y = 0, 0
+
+# Assicuriamoci di leggere il file con l'encoding corretto
+with open("data.txt", "r", encoding="utf-16" if os.path.exists("data.txt") else "utf-8") as f:
+    lines = f.readlines()
+
+for line in lines:
+    # Rimuove tutto ciò che non è un carattere esadecimale
+    raw = "".join(c for c in line if c in "0123456789abcdefABCDEF")
+    
+    # Se abbiamo almeno 6 caratteri (3 byte: Click, X, Y)
+    if len(raw) >= 6:
+        try:
+            btn = int(raw[0:2], 16)
+            dx = int(raw[2:4], 16)
+            dy = int(raw[4:6], 16)
+
+            # Conversione Two's Complement (per movimenti negativi)
+            if dx > 127: dx -= 256
+            if dy > 127: dy -= 256
+
+            x += dx
+            y += dy # Se la vedi sottosopra, cambia in: y -= dy
+            
+            # Salviamo il punto: (x, y, premuto?)
+            points.append((x, y, btn > 0))
+        except:
+            continue
+
+if not points:
+    # Se fallisce ancora, proviamo a leggere come utf-8 semplice
+    print("Tentativo fallito. Provo a rileggere il file in modalità grezza...")
+    # (Codice di emergenza rimosso per brevità, ma questo sopra dovrebbe bastare)
+    exit()
+
+# Calcolo dei confini per il disegno
+xs, ys = [p[0] for p in points], [p[1] for p in points]
+min_x, max_x = min(xs), max(xs)
+min_y, max_y = min(ys), max(ys)
+w, h = max_x - min_x + 100, max_y - min_y + 100
+
+with open("flag.svg", "w") as f:
+    f.write(f'<svg width="{w}" height="{h}" viewBox="0 0 {w} {h}" xmlns="http://www.w3.org/2000/svg">')
+    f.write('<rect width="100%" height="100%" fill="#1a1a1a"/>')
+    for px, py, click in points:
+        color = "#ff4d4d" if click else "#555555"
+        r = "1.5" if click else "0.5"
+        f.write(f'<circle cx="{px-min_x+50}" cy="{py-min_y+50}" r="{r}" fill="{color}" />')
+    f.write('</svg>')
+
+print(f"Successo! Estratti {len(points)} punti. Apri flag.svg")
+
+
+
