@@ -1,0 +1,3 @@
+flag{non_diventare_matto_reversando_ogni_cosa}
+
+sudo tcpdump -i any -A mettersi in ascolto sulla wsl e poi su un'altro terminale eseguire il file
