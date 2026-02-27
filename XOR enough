@@ -1,0 +1,69 @@
+ flag{1f_y0u_Kn0w_En0uGH_y0u_Kn0w_1t_4ll}  
+
+
+import string
+
+def xor_repeat(data, key):
+    """Esegue lo XOR tra dati e chiave ripetendo la chiave ciclicamente."""
+    return bytes([data[i] ^ key[i % len(key)] for i in range(len(data))])
+
+def crack_xor(hex_ciphertext, crib):
+    """
+    Tenta di decifrare un messaggio XOR usando un frammento noto (crib).
+    Funziona anche se il crib non è all'inizio del messaggio.
+    """
+    try:
+        ct = bytes.fromhex(hex_ciphertext)
+    except ValueError:
+        print("Errore: Il testo cifrato non è in formato esadecimale valido.")
+        return
+
+    crib_bytes = crib.encode()
+    
+    print(f"\n{'OFFSET':<7} | {'CHIAVE':<12} | {'MESSAGGIO DECIFRATO'}")
+    print("-" * 80)
+
+    for i in range(len(ct) - len(crib_bytes) + 1):
+        # 1. Estraggo la potenziale chiave XORando il pezzo di CT con il CRIB
+        # P ^ C = K
+        potential_key = bytes([ct[i + j] ^ crib_bytes[j] for j in range(len(crib_bytes))])
+        
+        # 2. Decifro l'intero messaggio usando questa chiave (ripetuta)
+        decoded_attempt = xor_repeat(ct, potential_key)
+        
+        # 3. Filtro i risultati
+        try:
+            # Decodifico in ASCII ignorando errori per non bloccare lo script
+            res_text = decoded_attempt.decode('ascii', errors='ignore')
+            
+            # Condizione di stampa: mostriamo il risultato solo se:
+            # - Il crib è presente nel testo decifrato (conferma matematica)
+            # - La chiave trovata è composta da caratteri stampabili
+            if crib in res_text and all(chr(b) in string.printable for b in potential_key):
+                # Puliamo il testo da newline per una stampa ordinata
+                clean_text = res_text.replace('\n', ' ').replace('\r', '')
+                key_text = potential_key.decode(errors='ignore')
+                
+                print(f"{i:<7} | {key_text:<12} | {clean_text}")
+        except Exception:
+            continue
+
+# --- CONFIGURAZIONE ---
+if __name__ == "__main__":
+    # Inserisci qui la stringa HEX della sfida
+    ciphertext_hex = "1e03132c3e681e300b7b30063301423c1a1c165f070c0d06015f07140e3748182d7a31064c031e36"
+    
+    # Inserisci la parte nota (es. flag{, ITASEC{, CTF{, {)
+    my_crib = "flag{"
+
+    crack_xor(ciphertext_hex, my_crib)
+    
+    
+    #quando vedo che c'è una chiave più o meno funzionante provo a tentare di ricostruirla a mano e poi la metto al posto di test_key di sotto
+    """
+    # Sostituisci la parte finale del vecchio script con questa logica "manuale"
+    ct = bytes.fromhex(ciphertext_hex)
+    # Se hai visto che la chiave inizia con 'xorKE', prova a indovinare il resto
+    test_key = b"xorKEY" 
+    print(f"Risultato con chiave {test_key}: {xor_repeat(ct, test_key).decode(errors='ignore')}")
+    """
