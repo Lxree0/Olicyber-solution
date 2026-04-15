@@ -1,0 +1,32 @@
+questa pagina ha la pagina api/admin senza controllo quindi mi prendo il token 
+
+curl -X POST https://single-page-admin.challs.olicyber.it/api/register -H "Content-Type: application/json" -d '{"username": "testuser1234"}'
+poi faccio
+
+curl -X POST https://single-page-admin.challs.olicyber.it/api/admin \
+     -H "Authorization: Bearer d641e151-3c80-429c-843d-9b84443c0cd6"
+
+     L'header Authorization con lo schema Bearer è il metodo standard per dire a un server: "Io sono chi dico di essere, ed ecco la mia prova (il token)".
+
+Ecco una spiegazione semplice di come funziona e a cosa serve nel tuo caso specifico.
+
+1. Il significato letterale
+Il termine "Bearer" in inglese significa "portatore". In informatica, un Bearer Token è un documento digitale che garantisce l'accesso a chiunque lo "porti" con sé.
+
+È esattamente come un biglietto del cinema: non importa chi lo ha comprato, l'importante è che tu lo mostri all'ingresso. Se ce l'hai, entri.
+
+2. Perché si usa?
+In un'applicazione moderna (come quella della tua sfida), il server è "senza memoria" (stateless). Questo significa che:
+
+Al primo contatto (Login), il server ti dà una chiave (il Token).
+
+Per ogni richiesta successiva (es. vedere il Flag), il server non si ricorda di te.
+
+Tu devi quindi allegare quella chiave a ogni singola richiesta dentro l'header Authorization.
+
+3. La struttura dell'Header
+Quando invii il comando curl, l'header viene costruito così:
+
+Chiave: Authorization
+
+Valore: Bearer <tuo_token_qui>
