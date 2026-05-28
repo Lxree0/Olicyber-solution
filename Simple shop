@@ -1,0 +1,110 @@
+1), ("15ab0e93facbd49206b5440a13e442a7", 99) -- -' UNION SELECT 1, 'foo', 0 WHERE '1'='1 
+flag{th4t_W4s_4_FuN_1nJ3ct10N_d6540904}
+
+Ecco il write-up completo e dettagliato per la risoluzione di questa sfida, strutturato secondo gli standard delle competizioni CTF.
+
+---
+
+# CTF Write-up: Simple Shop (SQL Injection / Context Switching)
+
+## Descrizione della Vulnerabilità
+
+Il codice sorgente dell'applicazione analizzato presenta una grave vulnerabilità di **SQL Injection** combinata con un problema di **Context Switching (Double Injection)** dovuto al riutilizzo insicuro della variabile dell'input utente (`$product_id`) in due contesti SQL differenti (uno protetto da apici e uno no). Inoltre, i controlli di validazione dell'input tramite `intval()` vengono eseguiti troppo tardi, permettendo l'esecuzione di codice SQL malevolo.
+
+L'obiettivo della sfida è acquistare il prodotto con `id = 99` (la Flag), il quale ha un costo di 100 crediti, superando il budget iniziale dell'utente pari a 10 crediti.
+
+---
+
+## Analisi del Codice
+
+Le due query cruciali all'interno del file `buy.php` sono le seguenti:
+
+1. **La SELECT (Contesto Stringa):**
+```php
+$product = $pdo->query("SELECT * FROM products WHERE id='$product_id'")->fetch();
+
+```
+
+
+La variabile `$product_id` è racchiusa tra apici singoli (`'`). Il database utilizzato è **SQLite**.
+2. **L'INSERT (Contesto Numerico):**
+```php
+$pdo->query("INSERT INTO inventory (user, product_id) VALUES ('$username', $product_id);");
+
+```
+
+
+In questa seconda query, la stessa variabile `$product_id` viene incollata **senza apici protettivi**.
+
+### I Controlli da Evitare
+
+Il codice implementa due barriere logiche:
+
+1. `if ($product['price'] > $user['money'])`: Blocca la transazione se il prezzo restituito dalla SELECT è superiore ai soldi in possesso.
+2. `if (!in_array(intval($product_id), [1, 2, 3, 4]))`: Impedisce l'acquisto se l'ID non è tra i primi quattro consentiti.
+
+---
+
+## Strategia di Sfruttamento (Exploit)
+
+Poiché l'input viene riutilizzato, non possiamo inserire semplicemente un apice singolo per manipolare la `SELECT` senza rompere la sintassi dell' `INSERT`. Dobbiamo trovare un punto di equilibrio.
+
+Anziché cercare di modificare il prezzo del prodotto nella prima query, la strategia vincente consiste nel **lasciare che la SELECT acquisti un prodotto lecito (es. ID 1)**, per poi manipolare la seconda query sfruttando la sintassi degli **inserimenti multipli** di SQLite (`INSERT INTO ... VALUES (riga1), (riga2)`).
+
+In questo modo forzeremo il database ad aggiungere una seconda riga nell'inventario contenente l'ID della flag (99) associata al nostro username corrente.
+
+### Costruzione del Payload
+
+Il payload definitivo è:
+
+```text
+1), ("IL_TUO_USERNAME", 99) -- -' UNION SELECT 1, 'foo', 0 WHERE '1'='1
+
+```
+
+*(Nota: `IL_TUO_USERNAME` deve essere sostituito con l'account con cui si è effettuato il login).*
+
+---
+
+## Flusso di Esecuzione del Payload
+
+### 1. In PHP (Aggiramento del Type Juggling)
+
+La funzione `intval($product_id)` analizza la stringa partendo da sinistra. Poiché il payload inizia con il carattere `1`, la funzione restituisce l'intero `1`.
+L'ID `1` fa parte dell'array consentito `[1, 2, 3, 4]`, di conseguenza il controllo `in_array` viene superato con successo.
+
+### 2. Nella SELECT (Verifica del Prezzo)
+
+La query risultante nel motore SQLite diventa:
+
+```sql
+SELECT * FROM products WHERE id='1), ("IL_TUO_USERNAME", 99) -- -' UNION SELECT 1, 'foo', 0 WHERE '1'='1'
+
+```
+
+* La prima parte della query cerca un ID corrispondente all'intera stringa letterale. Non trovando nulla, restituisce un insieme vuoto.
+* La clausola `UNION SELECT 1, 'foo', 0` si attiva e restituisce un record fittizio strutturato con 3 colonne (coerentemente con il layout della tabella `products` composta da *id*, *name*, *price*), impostando il prezzo a `0`.
+* Il metodo `->fetch()` estrae questa riga fittizia. Il controllo del denaro verifica che `0 > money`, consentendo l'avanzamento dello script.
+* La sintassi finale `WHERE '1'='1'` si sposa perfettamente con l'apice di chiusura residuo inserito dal PHP, evitando anomalie di parsing.
+
+### 3. Nell'INSERT (Iniezione del Record della Flag)
+
+La query di inserimento nell'inventario diventa:
+
+```sql
+INSERT INTO inventory (user, product_id) VALUES ('il_tuo_username', 1), ("il_tuo_username", 99) -- -' UNION SELECT 1, 'foo', 0 WHERE '1'='1);
+
+```
+
+* SQLite interpreta la virgola dopo il valore `1` come un costrutto per l'inserimento multi-riga.
+* Viene inserita la prima riga regolare: `('il_tuo_username', 1)`.
+* Viene iniettata la seconda riga malevola: `("il_tuo_username", 99)`. L'uso delle virgolette doppie (`"`) evita il conflitto con gli apici singoli della prima query.
+* Il token di commento `--` tronca immediatamente tutto il resto del payload iniettato, neutralizzando la porzione della `UNION` e chiudendo la query in modo pulito.
+
+---
+
+## Conclusione
+
+Inviando il payload tramite una richiesta POST al parametro `product_id`, l'applicazione risponde con un codice di stato `302 Found`, segno che l'operazione è terminata correttamente senza sollevare eccezioni PDO.
+
+Navigando nuovamente sulla pagina principale dell'applicazione o nell'inventario del proprio profilo, la flag (prodotto 99) risulterà regolarmente sbloccata e visibile a schermo.
