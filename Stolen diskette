@@ -1,0 +1,22 @@
+flag{DeLeting_A_F1le_Is_Not_EnouGh}
+
+file floppy.img
+
+floppy.img: DOS/MBR boot sector, OEM-ID "mkfs.fat", sectors 2880, FAT (12 bit)
+
+The image is a standard 1.44 MB FAT12 floppy disk image formatted with mkfs.fat.
+
+Using The Sleuth Kit (fls), we listed the filesystem entries, including unallocated/deleted ones:
+
+Bash
+fls -r -p -a floppy.img
+
+Step 3: File Carving (Data Recovery)
+Extracting the raw inode directly using icat produced an incomplete PDF file (the initial cover text asking "Sei riuscito a sottrarre un floppy disk..."), as the FAT metadata pointers were unlinked or zeroed out.
+
+To recover the complete underlying PDF stream from unallocated sectors, we performed raw file carving using Foremost:
+
+Bash
+foremost -t pdf -i floppy.img -o output_pdf/
+
+pdftotext output_pdf/pdf/00000034.pdf -
