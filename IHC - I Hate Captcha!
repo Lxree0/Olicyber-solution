@@ -1,0 +1,109 @@
+IHC - I Hate Captcha!
+flag{fl46_m000000000000lTo_LuNg4_p3rCh3_s0n0_m000000000000lTo_5tr0n2o}
+
+
+import re
+from pwn import *
+
+HOST = "ihc.challs.olicyber.it"
+PORT = 34008
+
+def parse_and_solve(text):
+    # Rimuoviamo gli a capo per semplificare le regex
+    text = text.replace('\n', ' ')
+    
+    if "al contrario:" in text:
+        match = re.search(r"al contrario:\s*(\w+)", text)
+        if match: return match.group(1)[::-1]
+
+    elif "posizioni" in text:
+        match = re.search(r"posizioni\s*\[(.*?)\]\s*nella stringa\s*(\w+)", text)
+        if match:
+            pos_str, s = match.groups()
+            positions = [int(p.strip()) for p in pos_str.split(",")]
+            return "".join(s[p - 1] for p in positions)
+
+    elif "compare la lettera" in text:
+        match = re.search(r"compare la lettera\s+(\w+)\s+nella stringa\s+(\w+)", text)
+        if match:
+            char, s = match.groups()
+            return str(s.count(char))
+
+    elif "risultato" in text:
+        match = re.search(r"(\d+)\s*([\+\-\*\/])\s*(\d+)", text)
+        if match:
+            n1, op, n2 = match.groups()
+            n1, n2 = int(n1), int(n2)
+            if op == '+': return str(n1 + n2)
+            elif op == '-': return str(n1 - n2)
+            elif op == '*': return str(n1 * n2)
+            elif op == '/': return str(n1 // n2)
+
+    return None
+
+
+def solve():
+    context.log_level = 'error'  # Nasconde del tutto i log di pwntools per un output più pulito
+    
+    flag = ""  # Inizializziamo la stringa della flag vuota
+    
+    try:
+        r = remote(HOST, PORT)
+        print("[+] Connesso al server! Risolvo i captcha...\n")
+
+        # Invia Invio iniziale per cominciare
+        r.recvuntil(b"premi invio!")
+        r.sendline(b"")
+
+        while True:
+            try:
+                data = r.recvuntil(b"Risposta:", timeout=2).decode("utf-8", errors="ignore")
+                
+                # Se va in timeout, catturiamo l'ultimo pezzo
+                if not data:
+                    final_data = r.recvall(timeout=2).decode("utf-8", errors="ignore")
+                    # Controlla se c'è un ultimo premio prima della chiusura
+                    match = re.search(r"premio:\s*(.)", final_data)
+                    if match:
+                        flag += match.group(1)
+                    print(f"\n[!] Sessione terminata. Flag recuperata finora: {flag}")
+                    break
+                
+                # --- ESTRAZIONE DEL PREMIO ---
+                match = re.search(r"premio:\s*(.)", data)
+                if match:
+                    char = match.group(1)
+                    flag += char
+                    # Sovrascrive la stessa riga nel terminale per un bell'effetto visivo
+                    print(f"\r[>] Flag in costruzione: {flag}", end="", flush=True)
+                    
+                    # Condizione di vittoria!
+                    if char == "}":
+                        print(f"\n\n[🎉] FLAG COMPLETATA CON SUCCESSO!\n{flag}\n")
+                        break
+                
+                # Risolve e invia la risposta
+                response = parse_and_solve(data)
+                
+                if response is not None:
+                    r.sendline(response.encode("utf-8"))
+                else:
+                    print("\n\n[-] ATTENZIONE: Impossibile risolvere la domanda. Esco.")
+                    break
+                    
+            except EOFError:
+                # Estrae l'ultimo pezzo in caso di disconnessione
+                final_data = r.recvall(timeout=1).decode("utf-8", errors="ignore")
+                match = re.search(r"premio:\s*(.)", final_data)
+                if match:
+                    flag += match.group(1)
+                print(f"\n\n[!] Connessione chiusa dal server. Flag recuperata: {flag}")
+                break
+
+    except Exception as e:
+        print(f"\n[!] Errore generico: {e}")
+    finally:
+        r.close()
+
+if __name__ == "__main__":
+    solve()
