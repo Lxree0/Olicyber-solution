@@ -1,0 +1,7 @@
+nelle query dns ci sono quelle di attacker che sono numerate con questo comando te le trova tutte 
+
+tshark -r document_naming_system.pcapng -Y "dns.flags.response == 0" -T fields -e frame.numbe
+r -e dns.qry.name
+
+
+  flag{3vil_dns_s3rv3r!}
